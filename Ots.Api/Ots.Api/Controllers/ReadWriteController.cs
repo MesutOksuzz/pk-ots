@@ -5,6 +5,7 @@ namespace Ots.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[NonController]
 public class ReadWriteController : ControllerBase
 {
     // GET: api/<ReadWrite>
@@ -16,11 +17,10 @@ public class ReadWriteController : ControllerBase
 
     // GET api/<ReadWrite>/5
     [HttpGet("GetById/{id}")]
-    public string Get(int id)
+    public string Get([FromRoute]int id)
     {
         return "value";
     }
-
     // POST api/<ReadWrite>
     [HttpPost]
     public void Post([FromBody] string value)
@@ -29,13 +29,13 @@ public class ReadWriteController : ControllerBase
 
     // PUT api/<ReadWrite>/5
     [HttpPut("{id}")]
-    public void Put(int id, [FromBody] string value)
+    public void Put([FromRoute]int id, [FromBody] string value)
     {
     }
 
     // DELETE api/<ReadWrite>/5
     [HttpDelete("{id}")]
-    public void Delete(int id)
+    public void Delete([FromRoute]int id)
     {
     }
 }
