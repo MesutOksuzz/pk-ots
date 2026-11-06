@@ -16,6 +16,7 @@ public class Customer : BaseEntity
     public string IdentityNumber { get; set; }
     
     public virtual List<CustomerAddress> CustomerAddresses { get; set; }
+    public virtual List<CustomerPhone> CustomerPhones { get; set; }
     public virtual List<Account> Accounts { get; set; }
 }
 
@@ -32,6 +33,9 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
             builder.Property(x => x.IdentityNumber).IsRequired().HasMaxLength(11);
 
             builder.HasMany(x => x.CustomerAddresses)
+                .WithOne(x => x.Customer)
+                .HasForeignKey(x => x.CustomerId).IsRequired(true);
+            builder.HasMany(x => x.CustomerPhones)
                 .WithOne(x => x.Customer)
                 .HasForeignKey(x => x.CustomerId).IsRequired(true);
     }
