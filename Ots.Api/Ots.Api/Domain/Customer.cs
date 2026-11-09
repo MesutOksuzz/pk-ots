@@ -14,6 +14,8 @@ public class Customer : BaseEntity
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public string IdentityNumber { get; set; }
+    public int CustomerNumber { get; set; }
+    public DateTime OpenDate { get; set; }
     
     public virtual List<CustomerAddress> CustomerAddresses { get; set; }
     public virtual List<CustomerPhone> CustomerPhones { get; set; }
@@ -31,6 +33,8 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
             builder.Property(x => x.FirstName).IsRequired().HasMaxLength(100);
             builder.Property(x => x.LastName).IsRequired().HasMaxLength(100);
             builder.Property(x => x.IdentityNumber).IsRequired().HasMaxLength(11);
+            builder.Property(x => x.CustomerNumber).IsRequired();
+            builder.Property(x => x.OpenDate).IsRequired();
 
             builder.HasMany(x => x.CustomerAddresses)
                 .WithOne(x => x.Customer)

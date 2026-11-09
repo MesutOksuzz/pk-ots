@@ -129,6 +129,9 @@ namespace Ots.Api.Migrations.PostgreSql
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
+                    b.Property<int>("CustomerNumber")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -154,6 +157,9 @@ namespace Ots.Api.Migrations.PostgreSql
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
+
+                    b.Property<DateTime>("OpenDate")
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime>("UpdateDate")
                         .HasColumnType("timestamp without time zone");
@@ -264,6 +270,58 @@ namespace Ots.Api.Migrations.PostgreSql
                     b.ToTable("CustomerPhone", "dbo");
                 });
 
+            modelBuilder.Entity("Ots.Api.Domain.MoneyTransfer", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("numeric(18,4)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)");
+
+                    b.Property<long>("FromAccountId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("InsertDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("InsertUser")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ReferenceNumber")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<long>("ToAccountId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("TransactionDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("UpdateDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("UpdateUser")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FromAccountId");
+
+                    b.HasIndex("ToAccountId");
+
+                    b.ToTable("MoneyTransfer", "dbo");
+                });
+
             modelBuilder.Entity("Ots.Api.Domain.Account", b =>
                 {
                     b.HasOne("Ots.Api.Domain.Customer", "Customer")
@@ -306,6 +364,25 @@ namespace Ots.Api.Migrations.PostgreSql
                         .IsRequired();
 
                     b.Navigation("Customer");
+                });
+
+            modelBuilder.Entity("Ots.Api.Domain.MoneyTransfer", b =>
+                {
+                    b.HasOne("Ots.Api.Domain.Account", "FromAccount")
+                        .WithMany()
+                        .HasForeignKey("FromAccountId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Ots.Api.Domain.Account", "ToAccount")
+                        .WithMany()
+                        .HasForeignKey("ToAccountId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("FromAccount");
+
+                    b.Navigation("ToAccount");
                 });
 
             modelBuilder.Entity("Ots.Api.Domain.Account", b =>

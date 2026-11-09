@@ -5,8 +5,7 @@ namespace Ots.Api.DbContext;
 
 public class OtsPostgreSqlDbContext : Microsoft.EntityFrameworkCore.DbContext
 {
- public OtsPostgreSqlDbContext(DbContextOptions<OtsPostgreSqlDbContext> options) 
-  : base(options)
+ public OtsPostgreSqlDbContext(DbContextOptions<OtsPostgreSqlDbContext> options) : base(options)
             {
             }   
             public DbSet<Customer> Customers { get; set; }
@@ -14,6 +13,7 @@ public class OtsPostgreSqlDbContext : Microsoft.EntityFrameworkCore.DbContext
             public DbSet<CustomerPhone> CustomerPhones { get; set; }
             public DbSet<Account> Accounts { get; set; }
             public DbSet<AccountTransaction> AccountTransactions { get; set; }
+            public DbSet<MoneyTransfer> MoneyTransfers { get; set; }
             protected override void OnModelCreating(ModelBuilder modelBuilder)
             {
                 modelBuilder.ApplyConfigurationsFromAssembly(typeof(OtsPostgreSqlDbContext).Assembly);
