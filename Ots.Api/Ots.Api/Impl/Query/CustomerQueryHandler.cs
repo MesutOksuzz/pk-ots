@@ -10,9 +10,9 @@ public class CustomerQueryHandler :
     IRequestHandler<GetAllCustomersQuery, List<Customer>>,
     IRequestHandler<GetCustomerByIdQuery, Customer>
 {
-    private readonly OtsPostgreSqlDbContext context;
+    private readonly OtsMsSqlDbContext context;
 
-    public CustomerQueryHandler(OtsPostgreSqlDbContext context)
+    public CustomerQueryHandler(OtsMsSqlDbContext context)
     {
         this.context = context;
     }

@@ -8,9 +8,9 @@ namespace Ots.Api.Impl.Command;
 
 public class CustomerCommandHandler
 {
-    private readonly OtsPostgreSqlDbContext context;
+    private readonly OtsMsSqlDbContext context;
 
-    public CustomerCommandHandler(OtsPostgreSqlDbContext context)
+    public CustomerCommandHandler(OtsMsSqlDbContext context)
     {
         this.context = context;
     }
