@@ -2,9 +2,9 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ots.Api", "Ots.Api\Ots.Api.csproj", "{7D19D0FF-2B82-4294-B652-15CB51BB1277}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ots.Base", "..\Ots.Base\Ots.Base.csproj", "{31CF437A-BB64-4513-A72C-D42E1559C2FC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ots.Base", "Ots.Base\Ots.Base.csproj", "{31CF437A-BB64-4513-A72C-D42E1559C2FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ots.Schema", "..\Ots.Schema\Ots.Schema.csproj", "{EC6A9255-7C6B-4E2C-AEB1-AC5AE5EB77D0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ots.Schema", "Ots.Schema\Ots.Schema.csproj", "{EC6A9255-7C6B-4E2C-AEB1-AC5AE5EB77D0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
