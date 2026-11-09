@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Ots.Api.DbContext;
 
 namespace Ots.Api;
@@ -21,7 +22,7 @@ public class Startup
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         services.AddDbContext<OtsPostgreSqlDbContext>(options =>
             options.UseNpgsql(Configuration.GetConnectionString("PostgreSqlConnection")));
-
+        services.AddMediatR(config => config.RegisterServicesFromAssembly(typeof(Startup).Assembly));
 
         services.AddSwaggerGen();
     }
