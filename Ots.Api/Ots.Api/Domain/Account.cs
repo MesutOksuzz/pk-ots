@@ -39,6 +39,7 @@ public class AccountConfiguration : IEntityTypeConfiguration<Account>
 
         builder.HasMany(x => x.AccountTransactions)
             .WithOne(x => x.Account)
-            .HasForeignKey(x => x.AccountId).IsRequired(true);
+            .HasForeignKey(x => x.AccountId).IsRequired(true)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

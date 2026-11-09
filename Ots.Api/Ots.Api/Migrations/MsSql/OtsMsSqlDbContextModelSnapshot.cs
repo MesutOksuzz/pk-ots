@@ -162,6 +162,10 @@ namespace Ots.Api.Migrations.MsSql
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("MiddleName")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<DateTime>("OpenDate")
                         .HasColumnType("datetime2");
 
@@ -334,7 +338,7 @@ namespace Ots.Api.Migrations.MsSql
                     b.HasOne("Ots.Api.Domain.Customer", "Customer")
                         .WithMany("Accounts")
                         .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Customer");
@@ -345,7 +349,7 @@ namespace Ots.Api.Migrations.MsSql
                     b.HasOne("Ots.Api.Domain.Account", "Account")
                         .WithMany("AccountTransactions")
                         .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Account");
