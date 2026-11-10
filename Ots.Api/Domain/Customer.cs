@@ -17,10 +17,12 @@ public class Customer : BaseEntity
     public string IdentityNumber { get; set; }
     public int CustomerNumber { get; set; }
     public DateTime OpenDate { get; set; }
+    public bool IsActive { get; set; } = true;
     
     public virtual List<CustomerAddress> CustomerAddresses { get; set; }
     public virtual List<CustomerPhone> CustomerPhones { get; set; }
     public virtual List<Account> Accounts { get; set; }
+   
 }
 
 public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
