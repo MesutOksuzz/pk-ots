@@ -1,20 +1,27 @@
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Ots.Api.DbContext;
-
+using Ots.Api.Impl.Cqrs;
+using Ots.Api.Impl.Validation;
+using FluentValidation.AspNetCore;
 namespace Ots.Api;
 
 public class Startup
 {
     public IConfiguration Configuration { get; }
 
-    public Startup(IConfiguration configuration)
-    {
-        Configuration = configuration;
-    }
+    public Startup(IConfiguration configuration)=> Configuration = configuration;
+    
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddControllers();
+        services.AddControllers().AddFluentValidation(x =>
+        {
+            x.RegisterValidatorsFromAssemblyContaining<CustomerValidator>();
+        });
+        services.AddSwaggerGen();
+        string connectionStringMsSql = Configuration.GetConnectionString("MsSqlConnection");
+        string connectionStringPostgresql = Configuration.GetConnectionString("PostgreSqlConnection");
         
         services.AddDbContext<OtsMsSqlDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("MsSqlConnection")));
@@ -22,9 +29,8 @@ public class Startup
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         services.AddDbContext<OtsPostgreSqlDbContext>(options =>
             options.UseNpgsql(Configuration.GetConnectionString("PostgreSqlConnection")));
-        services.AddMediatR(config => config.RegisterServicesFromAssembly(typeof(Startup).Assembly));
-
-        services.AddSwaggerGen();
+        services.AddMediatR(config => config.RegisterServicesFromAssembly(typeof(CreateCustomerCommand).GetTypeInfo().Assembly));
+        
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

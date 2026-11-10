@@ -19,17 +19,13 @@ public class CustomerCommandHandler :
     {
         this.dbContext = dbContext;
     }
-
    // yukarıdaki methodlar implement edildi.
     public async Task<Customer> Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
     {
-
        var entity = await dbContext.AddAsync(request.customer, cancellationToken);
         await dbContext.SaveChangesAsync(cancellationToken);
         return entity.Entity;
-
     }
-
     public async Task<Customer> Handle(UpdateCustomerCommand request, CancellationToken cancellationToken)
     {
         var entity = await dbContext.Set<Customer>().FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
@@ -40,6 +36,7 @@ public class CustomerCommandHandler :
         entity.FirstName = request.customer.FirstName;
         entity.MiddleName = request.customer.MiddleName;
         entity.LastName = request.customer.LastName;
+        entity.Email = request.customer.Email;
 
         await dbContext.SaveChangesAsync(cancellationToken);
         return entity;
@@ -51,9 +48,9 @@ public class CustomerCommandHandler :
         if (entity == null)
         {
             //to do 
-            // alt satırda istersek hard delete ya da soft delete yapabiliriz. 
+            // alt satırda istersek hard delete ya da soft delete yapabiliriz ,biz soft yaptık. 
         }
-
+        
         entity.IsActive = false;
         
         await dbContext.SaveChangesAsync(cancellationToken);
