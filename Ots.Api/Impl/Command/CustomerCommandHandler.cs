@@ -4,14 +4,15 @@ using Microsoft.EntityFrameworkCore;
 using Ots.Api.DbContext;
 using Ots.Api.Domain;
 using Ots.Api.Impl.Cqrs;
+using Ots.Base.ApiResponse;
 using Ots.Schema;
 
 namespace Ots.Api.Impl.Command;
 
 public class CustomerCommandHandler : 
-    IRequestHandler<CreateCustomerCommand, CustomerResponse>,
-    IRequestHandler<UpdateCustomerCommand, CustomerResponse>,
-    IRequestHandler<DeleteCustomerCommand, CustomerResponse>
+    IRequestHandler<CreateCustomerCommand, ApiResponse<CustomerResponse>>,
+    IRequestHandler<UpdateCustomerCommand, ApiResponse>,
+    IRequestHandler<DeleteCustomerCommand, ApiResponse>
 
 
 {
@@ -24,49 +25,50 @@ public class CustomerCommandHandler :
         this.mapper = mapper;
     }
    // yukarıdaki methodlar implement edildi.
-    public async Task<CustomerResponse> Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
+   public async Task<ApiResponse> Handle(DeleteCustomerCommand request, CancellationToken cancellationToken)
+   {
+       var entity = await dbContext.Set<Customer>().FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+       if (entity == null)
+           return new ApiResponse("Customer NOT found");
+       if (!entity.IsActive)
+           return new ApiResponse("Customer is not active");
+        
+       entity.IsActive = false;
+        
+       await dbContext.SaveChangesAsync(cancellationToken);
+       return new ApiResponse();
+   }
+   public async Task<ApiResponse> Handle(UpdateCustomerCommand request, CancellationToken cancellationToken)
+   {
+       var entity = await dbContext.Set<Customer>().FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+       if (entity == null)
+           return new ApiResponse("Customer NOT found");
+
+       if (!entity.IsActive)
+           return new ApiResponse("Customer is not active");
+       
+       entity.FirstName = request.customer.FirstName;
+       entity.MiddleName = request.customer.MiddleName;
+       entity.LastName = request.customer.LastName;
+       entity.Email = request.customer.Email;
+       entity.UpdateDate = DateTime.Now;
+       entity.UpdateUser = null;
+
+       await dbContext.SaveChangesAsync(cancellationToken);
+       return new ApiResponse();
+   }
+    public async Task<ApiResponse<CustomerResponse>> Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
     {
         var mapped = mapper.Map<Customer>(request.customer);
-       var entity = await dbContext.AddAsync(request.customer, cancellationToken);
+        mapped.InsertDate = DateTime.Now;
+        mapped.OpenDate =  DateTime.Now;
+        mapped.InsertUser = "test";
+        mapped.CustomerNumber = new Random().Next(100000, 9999999);
+        mapped.IsActive = true;
+        
+       var entity = await dbContext.AddAsync(mapped, cancellationToken);
         await dbContext.SaveChangesAsync(cancellationToken);
         var response = mapper.Map<CustomerResponse>(entity.Entity);
-        return response;
-    }
-    public async Task<CustomerResponse> Handle(UpdateCustomerCommand request, CancellationToken cancellationToken)
-    {
-        var entity = await dbContext.Set<Customer>().FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
-        if (entity == null)
-        {
-            //to do 
-        }
-        entity.FirstName = request.customer.FirstName;
-        entity.MiddleName = request.customer.MiddleName;
-        entity.LastName = request.customer.LastName;
-        entity.Email = request.customer.Email;
-        entity.UpdateDate = DateTime.Now;
-        entity.UpdateUser = null;
-
-        await dbContext.SaveChangesAsync(cancellationToken);
-        var mapped = mapper.Map<CustomerResponse>(entity);
-        
-        return mapped;
-    }
-
-    public async Task<CustomerResponse> Handle(DeleteCustomerCommand request, CancellationToken cancellationToken)
-    {
-        var entity = await dbContext.Set<Customer>().FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
-        if (entity == null)
-        {
-            //to do 
-            // alt satırda istersek hard delete ya da soft delete yapabiliriz ,biz soft yaptık. 
-        }
-        
-        entity.IsActive = false;
-        
-        await dbContext.SaveChangesAsync(cancellationToken);
-
-        var mapped = mapper.Map<CustomerResponse>(entity);
-        
-        return mapped;
+        return new ApiResponse<CustomerResponse>(response);
     }
 }

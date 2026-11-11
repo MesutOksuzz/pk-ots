@@ -1,10 +1,11 @@
 using System.Data;
 using FluentValidation;
 using Ots.Api.Domain;
+using Ots.Schema;
 
 namespace Ots.Api.Impl.Validation;
 
-public class CustomerValidator : AbstractValidator<Customer>
+public class CustomerValidator : AbstractValidator<CustomerRequest>
 {
     public CustomerValidator()
     {
