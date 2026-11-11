@@ -1,10 +1,13 @@
 using System.Reflection;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Ots.Api.DbContext;
 using Ots.Api.Impl.Cqrs;
 using Ots.Api.Impl.Validation;
 using FluentValidation.AspNetCore;
+using Ots.Api.Mapper;
+
 namespace Ots.Api;
 
 public class Startup
@@ -19,6 +22,10 @@ public class Startup
         {
             x.RegisterValidatorsFromAssemblyContaining<CustomerValidator>();
         });
+        
+        var mapperConfig = new MapperConfiguration(x => x.AddProfile(new MapperConfig()));
+        services.AddSingleton(mapperConfig.CreateMapper());
+        
         services.AddSwaggerGen();
         string connectionStringMsSql = Configuration.GetConnectionString("MsSqlConnection");
         string connectionStringPostgresql = Configuration.GetConnectionString("PostgreSqlConnection");
