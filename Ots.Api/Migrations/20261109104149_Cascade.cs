@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿#nullable disable
 
-#nullable disable
+using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Ots.Api.Migrations.PostgreSql
+namespace Ots.Api.Migrations
 {
     /// <inheritdoc />
     public partial class Cascade : Migration

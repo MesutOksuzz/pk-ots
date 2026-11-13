@@ -13,15 +13,13 @@ public class CustomerQueryHandler :
     IRequestHandler<GetAllCustomersQuery, ApiResponse<List<CustomerResponse>>>,
     IRequestHandler<GetCustomerByIdQuery, ApiResponse<CustomerResponse>>
 {
-    private readonly OtsMsSqlDbContext context;
+    private readonly OtsDbContext context;
     private readonly IMapper mapper;
-
-    public CustomerQueryHandler(OtsMsSqlDbContext context,IMapper mapper)
+    public CustomerQueryHandler(OtsDbContext context,IMapper mapper)
     {
         this.context = context;
         this.mapper = mapper;
     }
-
     public async Task<ApiResponse<List<CustomerResponse>>> Handle(GetAllCustomersQuery request, 
         CancellationToken cancellationToken)
     {
@@ -30,7 +28,6 @@ public class CustomerQueryHandler :
         var mapped = mapper.Map<List<CustomerResponse>>(customers);
         return new ApiResponse<List<CustomerResponse>>(mapped);
     }
-
     public async Task<ApiResponse<CustomerResponse>> Handle(GetCustomerByIdQuery request,
         CancellationToken cancellationToken)
     {

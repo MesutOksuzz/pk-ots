@@ -1,29 +1,29 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿#nullable disable
 
-#nullable disable
+using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Ots.Api.Migrations.PostgreSql
+namespace Ots.Api.Migrations
 {
     /// <inheritdoc />
-    public partial class MiddleName : Migration
+    public partial class CustomerIsActive : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "MiddleName",
+            migrationBuilder.AddColumn<bool>(
+                name: "IsActive",
                 schema: "dbo",
                 table: "Customer",
-                type: "character varying(100)",
-                maxLength: 100,
-                nullable: true);
+                type: "bit",
+                nullable: false,
+                defaultValue: true);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "MiddleName",
+                name: "IsActive",
                 schema: "dbo",
                 table: "Customer");
         }

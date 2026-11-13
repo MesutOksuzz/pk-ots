@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿#nullable disable
 
-#nullable disable
+using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Ots.Api.Migrations.MsSql
+namespace Ots.Api.Migrations
 {
     /// <inheritdoc />
     public partial class MiddleName : Migration

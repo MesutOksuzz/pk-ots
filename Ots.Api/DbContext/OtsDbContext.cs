@@ -3,9 +3,9 @@ using Ots.Api.Domain;
 
 namespace Ots.Api.DbContext;
 
-public class OtsMsSqlDbContext : Microsoft.EntityFrameworkCore.DbContext
+public class OtsDbContext : Microsoft.EntityFrameworkCore.DbContext
 {
-    public OtsMsSqlDbContext(DbContextOptions<OtsMsSqlDbContext> options) : base(options)
+    public OtsDbContext(DbContextOptions<OtsDbContext> options) : base(options)
     {
     }
 
@@ -18,7 +18,7 @@ public class OtsMsSqlDbContext : Microsoft.EntityFrameworkCore.DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(OtsMsSqlDbContext).Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(OtsDbContext).Assembly);
         base.OnModelCreating(modelBuilder);
     }
 }

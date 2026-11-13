@@ -16,10 +16,10 @@ public class CustomerCommandHandler :
 
 
 {
-    private readonly OtsMsSqlDbContext dbContext;
+    private readonly OtsDbContext dbContext;
     private readonly IMapper mapper;
 
-    public CustomerCommandHandler(OtsMsSqlDbContext dbContext, IMapper mapper)
+    public CustomerCommandHandler(OtsDbContext dbContext, IMapper mapper)
     {
         this.dbContext = dbContext;
         this.mapper = mapper;

@@ -1,9 +1,8 @@
-﻿using System;
+﻿#nullable disable
+
 using Microsoft.EntityFrameworkCore.Migrations;
 
-#nullable disable
-
-namespace Ots.Api.Migrations.MsSql
+namespace Ots.Api.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration

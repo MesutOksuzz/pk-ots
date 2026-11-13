@@ -7,6 +7,10 @@ using Ots.Api.Impl.Cqrs;
 using Ots.Api.Impl.Validation;
 using FluentValidation.AspNetCore;
 using Ots.Api.Mapper;
+using Ots.Api.Middleware;
+using Ots.Base;
+using Ots.Base.Services;
+
 
 namespace Ots.Api;
 
@@ -27,17 +31,19 @@ public class Startup
         services.AddSingleton(mapperConfig.CreateMapper());
         
         services.AddSwaggerGen();
-        string connectionStringMsSql = Configuration.GetConnectionString("MsSqlConnection");
-        string connectionStringPostgresql = Configuration.GetConnectionString("PostgreSqlConnection");
         
-        services.AddDbContext<OtsMsSqlDbContext>(options =>
+        
+        
+        services.AddDbContext<OtsDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("MsSqlConnection")));
 
-        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-        services.AddDbContext<OtsPostgreSqlDbContext>(options =>
-            options.UseNpgsql(Configuration.GetConnectionString("PostgreSqlConnection")));
-        services.AddMediatR(config => config.RegisterServicesFromAssembly(typeof(CreateCustomerCommand).GetTypeInfo().Assembly));
         
+        
+        services.AddMediatR(config => config.RegisterServicesFromAssembly(typeof(CreateCustomerCommand).GetTypeInfo().Assembly));
+
+        services.AddScoped<ScopedService>();
+        services.AddTransient<TransientService>();
+        services.AddSingleton<SingletonService>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -48,13 +54,47 @@ public class Startup
             app.UseSwaggerUI();
             app.UseSwagger();
         }
-
+        
+        app.UseMiddleware<HeartBeatMiddleware>();
+        app.UseMiddleware<ErrorHandlerMiddleware>();
+        app.UseMiddleware<RequestLoggingMiddleware>();
+        
         app.UseHttpsRedirection();
-
         app.UseRouting();
-
         app.UseAuthorization();
-
         app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+        app.Use((context, next) =>
+        {
+            if (!string.IsNullOrEmpty(context.Request.Path) && context.Request.Path.Value.Contains("favicon"))
+            {
+                return next();
+            }
+            var singletonService = context.RequestServices.GetRequiredService<SingletonService>();
+            var scopedService = context.RequestServices.GetRequiredService<ScopedService>();
+            var transientService = context.RequestServices.GetRequiredService<TransientService>();
+
+            singletonService.Counter++;
+            scopedService.Counter++;
+            transientService.Counter++;
+
+            return next();
+        });
+        app.Run(async context =>
+        {
+            var singletonService = context.RequestServices.GetRequiredService<SingletonService>();
+            var scopedService = context.RequestServices.GetRequiredService<ScopedService>();
+            var transientService = context.RequestServices.GetRequiredService<TransientService>();
+
+            if (!string.IsNullOrEmpty(context.Request.Path) && !context.Request.Path.Value.Contains("favicon"))
+            {
+                singletonService.Counter++;
+                scopedService.Counter++;
+                transientService.Counter++;
+            }
+
+            await context.Response.WriteAsync($"SingletonService: {singletonService.Counter}\n");
+            await context.Response.WriteAsync($"TransientService: {transientService.Counter}\n");
+            await context.Response.WriteAsync($"ScopedService: {scopedService.Counter}\n");
+        });
     }
 }
