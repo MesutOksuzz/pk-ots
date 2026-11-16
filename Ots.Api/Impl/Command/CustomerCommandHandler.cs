@@ -51,8 +51,8 @@ public class CustomerCommandHandler :
        entity.MiddleName = request.customer.MiddleName;
        entity.LastName = request.customer.LastName;
        entity.Email = request.customer.Email;
-       entity.UpdateDate = DateTime.Now;
-       entity.UpdateUser = null;
+       entity.UpdatedDate = DateTime.Now;
+       entity.UpdatedUser = null;
 
        await dbContext.SaveChangesAsync(cancellationToken);
        return new ApiResponse();
@@ -60,9 +60,9 @@ public class CustomerCommandHandler :
     public async Task<ApiResponse<CustomerResponse>> Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
     {
         var mapped = mapper.Map<Customer>(request.customer);
-        mapped.InsertDate = DateTime.Now;
+        mapped.InsertedDate = DateTime.Now;
         mapped.OpenDate =  DateTime.Now;
-        mapped.InsertUser = "test";
+        mapped.InsertedUser = "test";
         mapped.CustomerNumber = new Random().Next(100000, 9999999);
         mapped.IsActive = true;
         

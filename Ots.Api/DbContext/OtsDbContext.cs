@@ -15,6 +15,7 @@ public class OtsDbContext : Microsoft.EntityFrameworkCore.DbContext
     public DbSet<Account> Accounts { get; set; }
     public DbSet<AccountTransaction> AccountTransactions { get; set; }
     public DbSet<MoneyTransfer> MoneyTransfers { get; set; }
+    public DbSet<EftTransaction> EftTransactions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
