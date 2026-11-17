@@ -20,4 +20,8 @@ public class AccountResponse : BaseResponse
     public string CurrencyCode { get; set; }
     public DateTime OpenDate { get; set; }
     public DateTime? CloseDate { get; set; }
+    
+    
+    public virtual List<EftTransactionResponse> EftTransactions { get; set; }
+    public virtual List<AccountTransactionResponse> AccountTransactions { get; set; }
 }
