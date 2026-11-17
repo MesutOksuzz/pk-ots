@@ -5,8 +5,9 @@ namespace Ots.Base.Domain;
 public class BaseEntity
 {
     public long Id { get; set; }
-    public string? InsertUser { get; set; }
-    public DateTime InsertDate { get; set; }
-    public string? UpdateUser { get; set; }
-    public DateTime UpdateDate { get; set; }
+    public string InsertedUser { get; set; }
+    public DateTime InsertedDate { get; set; }
+    public string? UpdatedUser { get; set; }
+    public DateTime? UpdatedDate { get; set; }
+    public bool IsActive { get; set; }
 }

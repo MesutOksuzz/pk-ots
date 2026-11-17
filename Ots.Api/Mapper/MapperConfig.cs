@@ -10,5 +10,7 @@ public class MapperConfig : Profile
     {
         CreateMap<CustomerRequest, Customer>();
         CreateMap<Customer, CustomerResponse>();
+
+       
     }
 }

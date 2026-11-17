@@ -17,7 +17,7 @@ public class Customer : BaseEntity
     public string IdentityNumber { get; set; }
     public int CustomerNumber { get; set; }
     public DateTime OpenDate { get; set; }
-    public bool IsActive { get; set; } = true;
+    
     
     public virtual List<CustomerAddress> CustomerAddresses { get; set; }
     public virtual List<CustomerPhone> CustomerPhones { get; set; }
@@ -31,6 +31,12 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
     {
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).UseIdentityColumn();
+            
+            builder.Property(x => x.InsertedDate).IsRequired(true);
+            builder.Property(x => x.UpdatedDate).IsRequired(false);
+            builder.Property(x => x.InsertedUser).IsRequired(true).HasMaxLength(250);
+            builder.Property(x => x.UpdatedUser).IsRequired(false).HasMaxLength(250);
+            builder.Property(x => x.IsActive).IsRequired(true).HasDefaultValue(true);
 
             builder.Property(x => x.Email).IsRequired().HasMaxLength(100);
             builder.Property(x => x.FirstName).IsRequired().HasMaxLength(100);

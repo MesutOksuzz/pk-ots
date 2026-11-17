@@ -34,8 +34,11 @@ namespace Ots.Api.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Balance")
-                        .HasPrecision(18, 4)
-                        .HasColumnType("decimal(18,4)");
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime?>("CloseDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("CurrencyCode")
                         .IsRequired()
@@ -50,22 +53,33 @@ namespace Ots.Api.Migrations
                         .HasMaxLength(26)
                         .HasColumnType("nvarchar(26)");
 
-                    b.Property<DateTime>("InsertDate")
+                    b.Property<DateTime>("InsertedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("InsertUser")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("InsertedUser")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<DateTime>("UpdateDate")
+                    b.Property<DateTime>("OpenDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("UpdateUser")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedUser")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.HasKey("Id");
 
@@ -85,20 +99,29 @@ namespace Ots.Api.Migrations
                     b.Property<long>("AccountId")
                         .HasColumnType("bigint");
 
-                    b.Property<decimal>("Amount")
-                        .HasPrecision(18, 4)
-                        .HasColumnType("decimal(18,4)");
+                    b.Property<decimal?>("CreditAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("DebitAmount")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
-                    b.Property<DateTime>("InsertDate")
+                    b.Property<DateTime>("InsertedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("InsertUser")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("InsertedUser")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
 
                     b.Property<string>("ReferenceNumber")
                         .IsRequired()
@@ -108,11 +131,16 @@ namespace Ots.Api.Migrations
                     b.Property<DateTime>("TransactionDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("UpdateDate")
+                    b.Property<string>("TransferType")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("UpdateUser")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("UpdatedUser")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.HasKey("Id");
 
@@ -147,14 +175,18 @@ namespace Ots.Api.Migrations
                         .HasMaxLength(11)
                         .HasColumnType("nvarchar(11)");
 
-                    b.Property<DateTime>("InsertDate")
+                    b.Property<DateTime>("InsertedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("InsertUser")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("InsertedUser")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -168,11 +200,12 @@ namespace Ots.Api.Migrations
                     b.Property<DateTime>("OpenDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("UpdateDate")
+                    b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("UpdateUser")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("UpdatedUser")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.HasKey("Id");
 
@@ -192,10 +225,10 @@ namespace Ots.Api.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("Country")
+                    b.Property<string>("CountryCode")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(3)
+                        .HasColumnType("nvarchar(3)");
 
                     b.Property<long>("CustomerId")
                         .HasColumnType("bigint");
@@ -205,22 +238,33 @@ namespace Ots.Api.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<DateTime>("InsertDate")
+                    b.Property<DateTime>("InsertedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("InsertUser")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("InsertedUser")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Street")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<DateTime>("UpdateDate")
+                    b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("UpdateUser")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("UpdatedUser")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("ZipCode")
                         .IsRequired()
@@ -250,11 +294,18 @@ namespace Ots.Api.Migrations
                     b.Property<long>("CustomerId")
                         .HasColumnType("bigint");
 
-                    b.Property<DateTime>("InsertDate")
+                    b.Property<DateTime>("InsertedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("InsertUser")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("InsertedUser")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
 
                     b.Property<bool>("IsDefault")
                         .HasColumnType("bit");
@@ -264,17 +315,91 @@ namespace Ots.Api.Migrations
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)");
 
-                    b.Property<DateTime>("UpdateDate")
+                    b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("UpdateUser")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("UpdatedUser")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
 
                     b.ToTable("CustomerPhone", "dbo");
+                });
+
+            modelBuilder.Entity("Ots.Api.Domain.EftTransaction", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("AccountId")
+                        .HasColumnType("bigint");
+
+                    b.Property<decimal>("Amount")
+                        .HasPrecision(16, 4)
+                        .HasColumnType("decimal(16,4)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<decimal?>("FeeAmount")
+                        .HasPrecision(16, 4)
+                        .HasColumnType("decimal(16,4)");
+
+                    b.Property<DateTime>("InsertedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("InsertedUser")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<string>("PaymentCategoryCode")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("ReceiverName")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("ReferenceNumber")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("ReveiverIban")
+                        .IsRequired()
+                        .HasMaxLength(26)
+                        .HasColumnType("nvarchar(26)");
+
+                    b.Property<DateTime>("TransactionDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedUser")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
+
+                    b.ToTable("EftTransaction", "dbo");
                 });
 
             modelBuilder.Entity("Ots.Api.Domain.MoneyTransfer", b =>
@@ -294,14 +419,25 @@ namespace Ots.Api.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
+                    b.Property<decimal?>("FeeAmount")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
+
                     b.Property<long>("FromAccountId")
                         .HasColumnType("bigint");
 
-                    b.Property<DateTime>("InsertDate")
+                    b.Property<DateTime>("InsertedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("InsertUser")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("InsertedUser")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
 
                     b.Property<string>("ReferenceNumber")
                         .IsRequired()
@@ -314,11 +450,12 @@ namespace Ots.Api.Migrations
                     b.Property<DateTime>("TransactionDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("UpdateDate")
+                    b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("UpdateUser")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("UpdatedUser")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.HasKey("Id");
 
@@ -373,6 +510,17 @@ namespace Ots.Api.Migrations
                     b.Navigation("Customer");
                 });
 
+            modelBuilder.Entity("Ots.Api.Domain.EftTransaction", b =>
+                {
+                    b.HasOne("Ots.Api.Domain.Account", "Account")
+                        .WithMany("EftTransactions")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+                });
+
             modelBuilder.Entity("Ots.Api.Domain.MoneyTransfer", b =>
                 {
                     b.HasOne("Ots.Api.Domain.Account", "FromAccount")
@@ -395,6 +543,8 @@ namespace Ots.Api.Migrations
             modelBuilder.Entity("Ots.Api.Domain.Account", b =>
                 {
                     b.Navigation("AccountTransactions");
+
+                    b.Navigation("EftTransactions");
                 });
 
             modelBuilder.Entity("Ots.Api.Domain.Customer", b =>

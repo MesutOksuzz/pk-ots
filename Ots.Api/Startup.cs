@@ -11,7 +11,6 @@ using Ots.Api.Middleware;
 using Ots.Base;
 using Ots.Base.Services;
 
-
 namespace Ots.Api;
 
 public class Startup
@@ -32,12 +31,8 @@ public class Startup
         
         services.AddSwaggerGen();
         
-        
-        
         services.AddDbContext<OtsDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("MsSqlConnection")));
-
-        
         
         services.AddMediatR(config => config.RegisterServicesFromAssembly(typeof(CreateCustomerCommand).GetTypeInfo().Assembly));
 
