@@ -12,7 +12,7 @@ public class HeartBeatMiddleware
     }
     public async Task InvokeAsync(HttpContext context)
     {
-        if (!context.Request.Path.StartsWithSegments("/api/Customers/GetAll"))
+        if (context.Request.Path.StartsWithSegments("/heartbeat"))
         {
             context.Response.ContentType = "text/plain";
             context.Response.StatusCode = (int)HttpStatusCode.OK;

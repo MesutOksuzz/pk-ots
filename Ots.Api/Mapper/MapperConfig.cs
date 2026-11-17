@@ -11,6 +11,12 @@ public class MapperConfig : Profile
         CreateMap<CustomerRequest, Customer>();
         CreateMap<Customer, CustomerResponse>();
 
-       
+        CreateMap<CustomerPhoneRequest, CustomerPhone>();
+        CreateMap<CustomerPhone, CustomerPhoneResponse>()
+            .ForMember(dest => dest.CustomerName,
+                opt => opt.MapFrom(src => src.Customer.FirstName + " " + src.Customer.LastName))
+            .ForMember(dest => dest.CustomerName, 
+                opt => opt.MapFrom(src => src.Customer.CustomerNumber));
+
     }
 }
