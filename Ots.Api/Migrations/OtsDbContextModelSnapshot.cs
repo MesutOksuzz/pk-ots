@@ -100,10 +100,12 @@ namespace Ots.Api.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<decimal?>("CreditAmount")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
 
                     b.Property<decimal?>("DebitAmount")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
 
                     b.Property<string>("Description")
                         .IsRequired()

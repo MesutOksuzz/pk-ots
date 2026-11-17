@@ -35,6 +35,8 @@ public class AccountTransactionConfiguration : IEntityTypeConfiguration<AccountT
         
         builder.Property(x => x.AccountId).IsRequired(true);
         builder.Property(x => x.Description).IsRequired().HasMaxLength(250);
+        builder.Property(x => x.DebitAmount).IsRequired(false).HasPrecision(18, 4);
+        builder.Property(x => x.CreditAmount).IsRequired(false).HasPrecision(18, 4);
         builder.Property(x => x.TransactionDate).IsRequired();
         builder.Property(x => x.ReferenceNumber).IsRequired().HasMaxLength(50);
         builder.Property(x => x.TransferType).IsRequired(false).HasMaxLength(50);
