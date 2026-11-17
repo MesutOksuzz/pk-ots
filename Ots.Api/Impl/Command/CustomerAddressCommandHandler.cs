@@ -53,7 +53,7 @@ public class CustomerAddressCommandHandler :
         entity.City = request.CustomerAddress.City;
         entity.District = request.CustomerAddress.District;
         entity.Street = request.CustomerAddress.Street;
-        entity.ZipCode = null;
+        entity.ZipCode = request.CustomerAddress.ZipCode;
         entity.IsDefault = request.CustomerAddress.IsDefault;
         entity.UpdatedDate = DateTime.Now;
         entity.UpdatedUser = null;
