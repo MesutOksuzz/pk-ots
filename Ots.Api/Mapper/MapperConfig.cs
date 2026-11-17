@@ -35,6 +35,12 @@ public class MapperConfig : Profile
             .ForMember(dest => dest.CustomerNumber,
                 opt => opt.MapFrom(src => src.Customer.CustomerNumber));
         
-        
+        CreateMap<AccountTransaction, AccountTransactionResponse>()
+            .ForMember(dest => dest.AccountName, opt => opt.MapFrom(src => src.Account.Name))
+            .ForMember(dest => dest.AccountIban, opt => opt.MapFrom(src => src.Account.IBAN))
+            .ForMember(dest => dest.AccountNumber, opt => opt.MapFrom(src => src.Account.AccountNumber))
+            .ForMember(dest => dest.CustomerId, opt => opt.MapFrom(src => src.Account.CustomerId))
+            .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Account.Customer.FirstName + " " + src.Account.Customer.LastName))
+            .ForMember(dest => dest.CustomerNumber, opt => opt.MapFrom(src => src.Account.Customer.CustomerNumber));
     }
 }

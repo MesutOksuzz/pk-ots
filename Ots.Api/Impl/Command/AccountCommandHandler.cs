@@ -7,6 +7,7 @@ using Ots.Api.Impl.Cqrs;
 using Ots.Base.ApiResponse;
 using Ots.Schema;
 
+namespace Ots.Api.Impl.Command;
 
 public class AccountCommandHandler:
     IRequestHandler<CreateAccountCommand, ApiResponse<AccountResponse>>,

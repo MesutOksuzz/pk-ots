@@ -43,9 +43,9 @@ public class AccountsController : ControllerBase
     
 
     [HttpPut("{id}")]
-    public async Task<ApiResponse> Put([FromRoute] int id, [FromBody] AccountRequest Account)
+    public async Task<ApiResponse> Put([FromRoute] int id, [FromBody] AccountRequest account)
     {
-        var operation = new UpdateAccountCommand(id, Account);
+        var operation = new UpdateAccountCommand(id, account);
         var result = await mediator.Send(operation);
         return result;
     }
