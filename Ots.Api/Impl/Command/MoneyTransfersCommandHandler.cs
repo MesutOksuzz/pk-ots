@@ -14,13 +14,12 @@ public class MoneyTransfersCommandHandler :
     IRequestHandler<CreateMoneyTransferCommand, ApiResponse<TransactionResponse>>
 {
     private readonly OtsDbContext dbContext;
-    private readonly IMapper mapper;
+    
     private readonly IAccountService accountService;
 
     public MoneyTransfersCommandHandler(OtsDbContext dbContext, IMapper mapper,IAccountService accountService)
     {
         this.dbContext = dbContext;
-        this.mapper = mapper;
         this.accountService = accountService;
     }
 
