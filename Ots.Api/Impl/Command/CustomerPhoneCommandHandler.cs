@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Ots.Api.DbContext;
 using Ots.Api.Domain;
 using Ots.Api.Impl.Cqrs;
+using Ots.Api.Impl.Service;
 using Ots.Base.ApiResponse;
 using Ots.Schema;
 
@@ -16,13 +17,14 @@ public class CustomerPhoneCommandHandler :
 {
     private readonly OtsDbContext dbContext;
     private readonly IMapper mapper;
+    
 
     public CustomerPhoneCommandHandler(OtsDbContext dbContext, IMapper mapper)
     {
         this.dbContext = dbContext;
         this.mapper = mapper;
+        
     }
-
     public async Task<ApiResponse> Handle(DeleteCustomerPhoneCommand request, CancellationToken cancellationToken)
     {
         var entity = await dbContext.Set<CustomerPhone>().FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
@@ -39,7 +41,6 @@ public class CustomerPhoneCommandHandler :
         await dbContext.SaveChangesAsync(cancellationToken);
         return new ApiResponse();
     }
-
     public async Task<ApiResponse> Handle(UpdateCustomerPhoneCommand request, CancellationToken cancellationToken)
     {
         var entity = await dbContext.Set<CustomerPhone>().FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);

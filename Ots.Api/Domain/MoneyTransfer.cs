@@ -10,10 +10,10 @@ public class MoneyTransfer : BaseEntity
 {
     public long FromAccountId { get; set; }
     public virtual Account FromAccount { get; set; }
-    
+
     public long ToAccountId { get; set; }
     public virtual Account ToAccount { get; set; }
-    
+
     public decimal Amount { get; set; }
     public decimal? FeeAmount { get; set; }
     public string Description { get; set; }

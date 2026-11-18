@@ -6,6 +6,7 @@ using Ots.Api.DbContext;
 using Ots.Api.Impl.Cqrs;
 using Ots.Api.Impl.Validation;
 using FluentValidation.AspNetCore;
+using Ots.Api.Impl.Service;
 using Ots.Api.Mapper;
 using Ots.Api.Middleware;
 using Ots.Base;
@@ -39,6 +40,8 @@ public class Startup
         services.AddScoped<ScopedService>();
         services.AddTransient<TransientService>();
         services.AddSingleton<SingletonService>();
+
+        services.AddScoped<IAccountService, AccountService>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
