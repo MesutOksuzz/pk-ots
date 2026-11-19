@@ -9,13 +9,15 @@ public class OtsDbContext : Microsoft.EntityFrameworkCore.DbContext
     {
     }
 
-    public DbSet<Customer> Customers { get; set; }
+  /*  public DbSet<Customer> Customers { get; set; }
     public DbSet<CustomerAddress> CustomerAddresses { get; set; }
     public DbSet<CustomerPhone> CustomerPhones { get; set; }
     public DbSet<Account> Accounts { get; set; }
     public DbSet<AccountTransaction> AccountTransactions { get; set; }
     public DbSet<MoneyTransfer> MoneyTransfers { get; set; }
     public DbSet<EftTransaction> EftTransactions { get; set; }
+    public DbSet<User> Users { get; set; }  BURADAKİ conf. aşşağıdaki
+    ApplyConfigurationsFromAssembly ile yapmış oluyoruz*/
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -52,7 +52,7 @@ public class EftTransactionsCommandHandler :
             ReferenceNumber = refNumber,
             FeeAmount = feeAmount,
             InsertedDate = DateTime.Now,
-            InsertedUser = null,
+            InsertedUser = "System",
         };
         await dbContext.Set<EftTransaction>().AddAsync(eftTransaction, cancellationToken);
         await dbContext.SaveChangesAsync(cancellationToken);

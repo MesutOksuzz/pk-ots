@@ -17,7 +17,7 @@ public class MoneyTransfersCommandHandler :
     
     private readonly IAccountService accountService;
 
-    public MoneyTransfersCommandHandler(OtsDbContext dbContext, IMapper mapper,IAccountService accountService)
+    public MoneyTransfersCommandHandler(OtsDbContext dbContext,IAccountService accountService)
     {
         this.dbContext = dbContext;
         this.accountService = accountService;
@@ -65,7 +65,7 @@ public class MoneyTransfersCommandHandler :
             ReferenceNumber = refNumber,
             FeeAmount = feeAmount,
             InsertedDate = DateTime.Now,
-            InsertedUser = null,
+            InsertedUser = "System",
         };
         await dbContext.Set<MoneyTransfer>().AddAsync(MoneyTransfer, cancellationToken);
         await dbContext.SaveChangesAsync(cancellationToken);

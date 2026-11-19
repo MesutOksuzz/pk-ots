@@ -49,7 +49,7 @@ public class AccountService : IAccountService
 
         await dbContext.SaveChangesAsync();
         
-        return new ApiResponse("Invalid transaction type");
+        return new ApiResponse();
     }
     public async Task<ApiResponse> CreateOutgoingAccountTransaction(long accountId, decimal amount, decimal feeAmount,string description,string refNumber)
     {
@@ -102,7 +102,7 @@ public class AccountService : IAccountService
 
         await dbContext.SaveChangesAsync();
         
-        return new ApiResponse("Invalid transaction type");
+        return new ApiResponse();
     }
     
 }
