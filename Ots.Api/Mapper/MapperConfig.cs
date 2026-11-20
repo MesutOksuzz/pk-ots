@@ -11,6 +11,11 @@ public class MapperConfig : Profile
         CreateMap<CustomerRequest, Customer>();
         CreateMap<Customer, CustomerResponse>();
 
+        CreateMap<UserRequest, User>();
+        CreateMap<User, UserResponse>();
+        
+        
+
         
         CreateMap<CustomerPhoneRequest, CustomerPhone>();
         CreateMap<CustomerPhone, CustomerPhoneResponse>()

@@ -18,10 +18,15 @@ public class Startup
 {
     public IConfiguration Configuration { get; }
 
+    public static JwtConfig JwtConfig { get; private set; }
     public Startup(IConfiguration configuration)=> Configuration = configuration;
     
     public void ConfigureServices(IServiceCollection services)
     {
+        JwtConfig = Configuration.GetSection("JwtConfig").Get<JwtConfig>();
+        services.AddSingleton<JwtConfig>(JwtConfig);
+        
+        
         services.AddControllers().AddFluentValidation(x =>
         {
             x.RegisterValidatorsFromAssemblyContaining<CustomerValidator>();
@@ -42,6 +47,7 @@ public class Startup
         services.AddSingleton<SingletonService>();
 
         services.AddScoped<IAccountService, AccountService>();
+        services.AddScoped<ITokenService, TokenService>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
