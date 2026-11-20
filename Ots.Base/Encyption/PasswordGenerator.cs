@@ -21,7 +21,7 @@ public static class PasswordGenerator
         var provider = MD5.Create();
         byte[] bytes = provider.ComputeHash(Encoding.ASCII.GetBytes(salt + input));
         string computedHash = BitConverter.ToString(bytes);
-        return computedHash;
+        return computedHash.Replace("-", "");
     } 
 
     public static string GeneratePassword(int length)
