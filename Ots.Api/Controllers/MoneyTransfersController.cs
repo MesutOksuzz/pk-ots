@@ -3,11 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 using Ots.Api.Impl.Cqrs;
 using Ots.Base.ApiResponse;
 using Ots.Schema;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Ots.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class MoneyTransfersController : ControllerBase
 {
     private readonly IMediator mediator;
