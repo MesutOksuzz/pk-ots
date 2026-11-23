@@ -64,8 +64,7 @@ public class AccountCommandHandler:
             return new ApiResponse<AccountResponse>("Customer is not active");
 
         var mapped = mapper.Map<Account>(request.Account);
-        mapped.InsertedDate = DateTime.Now;
-        mapped.InsertedUser = "test";
+       
         mapped.IsActive = true;
         mapped.AccountNumber = new Random().Next(100000000, 999999999);
         mapped.IBAN = "TR" + mapped.AccountNumber.ToString("D24");

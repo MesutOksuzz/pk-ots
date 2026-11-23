@@ -18,13 +18,14 @@ public class UserCommandHandler :
 {
     private readonly OtsDbContext dbContext;
     private readonly IMapper mapper;
+    private readonly IAppSession appSession;
     
 
-    public UserCommandHandler(OtsDbContext dbContext, IMapper mapper)
+    public UserCommandHandler(OtsDbContext dbContext, IMapper mapper,IAppSession appSession)
     {
         this.dbContext = dbContext;
         this.mapper = mapper;
-        
+        this.appSession = appSession;
     }
     public async Task<ApiResponse> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
     {
@@ -36,8 +37,6 @@ public class UserCommandHandler :
             return new ApiResponse("User is not active");
 
         entity.IsActive = false;
-        entity.UpdatedDate = DateTime.Now;
-        entity.UpdatedUser = null;
 
         await dbContext.SaveChangesAsync(cancellationToken);
         return new ApiResponse();
@@ -55,8 +54,6 @@ public class UserCommandHandler :
         entity.LastName = request.User.LastName;
         entity.Role = request.User.Role;
         
-        entity.UpdatedDate = DateTime.Now;
-        entity.UpdatedUser = null;
 
         await dbContext.SaveChangesAsync(cancellationToken);
         return new ApiResponse();
@@ -65,9 +62,8 @@ public class UserCommandHandler :
     public async Task<ApiResponse<UserResponse>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
         var mapped = mapper.Map<User>(request.User);
-        mapped.InsertedDate = DateTime.Now;
+        
         mapped.OpenDate = DateTime.Now;
-        mapped.InsertedUser = "test";
         mapped.IsActive = true;
         mapped.Secret = PasswordGenerator.GeneratePassword(30);
 

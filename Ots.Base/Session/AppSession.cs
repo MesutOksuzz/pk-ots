@@ -1,13 +1,14 @@
+using Microsoft.AspNetCore.Http;
+
 namespace Ots.Base;
 
 public class AppSession : IAppSession
 {
-    public string UserName { get; }
-    public string Token { get; }
-    public DateTime Expiration { get; }
-    public string UserId { get; }
-    public string UserRole { get; }
-    public string FirstName { get; }
-    public string LastName { get; }
-    public HttpContext httpContext { get; }
+    public string UserName { get; set; }
+    public string Token { get; set; }
+    public string UserId { get; set; }
+    public string UserRole { get; set; }
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    public HttpContext HttpContext { get; set; }
 }

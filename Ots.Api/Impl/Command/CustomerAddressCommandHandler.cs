@@ -55,8 +55,7 @@ public class CustomerAddressCommandHandler :
         entity.Street = request.CustomerAddress.Street;
         entity.ZipCode = request.CustomerAddress.ZipCode;
         entity.IsDefault = request.CustomerAddress.IsDefault;
-        entity.UpdatedDate = DateTime.Now;
-        entity.UpdatedUser = null;
+        
 
         await dbContext.SaveChangesAsync(cancellationToken);
         return new ApiResponse();

@@ -60,9 +60,9 @@ public class CustomerCommandHandler :
     public async Task<ApiResponse<CustomerResponse>> Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
     {
         var mapped = mapper.Map<Customer>(request.customer);
-        mapped.InsertedDate = DateTime.Now;
+        
         mapped.OpenDate =  DateTime.Now;
-        mapped.InsertedUser = "test";
+        
         mapped.CustomerNumber = new Random().Next(100000, 9999999);
         mapped.IsActive = true;
         

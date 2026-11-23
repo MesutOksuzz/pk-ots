@@ -50,11 +50,9 @@ public class CustomerPhoneCommandHandler :
         if (!entity.IsActive)
             return new ApiResponse("CustomerPhone is not active");
 
-        entity.CountryCode = request.CustomerPhone.CountryCode;
+       
         entity.PhoneNumber = request.CustomerPhone.PhoneNumber;
-        entity.IsDefault = request.CustomerPhone.IsDefault;
-        entity.UpdatedDate = DateTime.Now;
-        entity.UpdatedUser = null;
+        
 
         await dbContext.SaveChangesAsync(cancellationToken);
         return new ApiResponse();
@@ -70,8 +68,6 @@ public class CustomerPhoneCommandHandler :
             return new ApiResponse<CustomerPhoneResponse>("Customer is not active");
 
         var mapped = mapper.Map<CustomerPhone>(request.CustomerPhone);
-        mapped.InsertedDate = DateTime.Now;
-        mapped.InsertedUser = "test";
         mapped.IsActive = true;
 
         var entity = await dbContext.AddAsync(mapped, cancellationToken);
