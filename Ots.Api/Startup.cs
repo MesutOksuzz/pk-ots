@@ -105,9 +105,12 @@ public class Startup
                 });
         });
 
+        services.AddHttpContextAccessor();
         services.AddScoped<IAppSession>(provider =>
         {
             var httpContextAccessor = provider.GetService<IHttpContextAccessor>();
+            if (httpContextAccessor?.HttpContext == null)
+                return new AppSession();
             AppSession appSession = JwtManager.GetSession(httpContextAccessor.HttpContext);
 
             return appSession;
