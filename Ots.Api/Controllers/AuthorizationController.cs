@@ -10,7 +10,7 @@ namespace Ots.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
+
 public class AuthorizationController : ControllerBase
 {
     private readonly IMediator mediator;

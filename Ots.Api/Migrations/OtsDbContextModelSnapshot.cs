@@ -163,6 +163,9 @@ namespace Ots.Api.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
+                    b.Property<string>("ChangedValues")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("EntityId")
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
@@ -170,6 +173,9 @@ namespace Ots.Api.Migrations
                     b.Property<string>("EntityName")
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
+
+                    b.Property<string>("OriginalValues")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("Timestamp")
                         .HasColumnType("datetime2");
