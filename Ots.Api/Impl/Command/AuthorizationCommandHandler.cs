@@ -28,11 +28,11 @@ public class AuthorizationCommandHandler:
         var user = await dbContext.Set<User>()
             .FirstOrDefaultAsync(x => x.UserName == request.Request.UserName, cancellationToken);
         if (user == null)
-            return new ApiResponse<AuthorizationResponse>("User not found");
+            return new ApiResponse<AuthorizationResponse>("User Name or Password is invalid ");
         
         var hashedPassword = PasswordGenerator.CreateMD5(request.Request.Password, user.Secret);
         if (hashedPassword != user.Password)
-            return new ApiResponse<AuthorizationResponse>("Invalid password");
+            return new ApiResponse<AuthorizationResponse>("User Name or Password is invalid");
 
         var token = tokenService.GenerateToken(user);
         var entity = new AuthorizationResponse

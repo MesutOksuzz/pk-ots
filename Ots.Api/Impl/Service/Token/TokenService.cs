@@ -50,8 +50,7 @@ public class TokenService : ITokenService
             new Claim("UserName", user.UserName),
             new Claim("UserId", user.Id.ToString()),
             new Claim("Secret", user.Secret),
-            new Claim("OpenDate", user.OpenDate.ToString()),
-            new Claim("LastLoginDate", user.LastLoginDate?.ToString() ?? string.Empty)
+            new Claim(ClaimTypes.Role, user.Role)
         };
         return claims.ToArray();
     }

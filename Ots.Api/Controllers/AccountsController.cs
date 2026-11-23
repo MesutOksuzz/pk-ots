@@ -9,7 +9,7 @@ namespace Ots.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
+
 public class AccountsController : ControllerBase
 {
     private readonly IMediator mediator;
@@ -20,6 +20,7 @@ public class AccountsController : ControllerBase
     }
 
     [HttpGet("GetAll")]
+    [Authorize(Roles = "admin,user")]   //burası sadece user iken 403 dönüyor !!
     public async Task<ApiResponse<List<AccountResponse>>> GetAll()
     {
         var operation = new GetAllAccountsQuery();
@@ -28,6 +29,7 @@ public class AccountsController : ControllerBase
     }
 
     [HttpGet("GetById/{id}")]
+    [Authorize(Roles = "admin, user")]
     public async Task<ApiResponse<AccountResponse>> GetById([FromRoute] int id)
     {
         var operation = new GetAccountByIdQuery(id);
@@ -35,7 +37,8 @@ public class AccountsController : ControllerBase
         return result;
     }
     
-    [HttpPost]
+    [HttpPost()]
+    [Authorize]
     public async Task<ApiResponse<AccountResponse>> Post( [FromBody] AccountRequest account)
     {
         var operation = new CreateAccountCommand( account);
@@ -45,6 +48,7 @@ public class AccountsController : ControllerBase
     
 
     [HttpPut("{id}")]
+    [Authorize]
     public async Task<ApiResponse> Put([FromRoute] int id, [FromBody] AccountRequest account)
     {
         var operation = new UpdateAccountCommand(id, account);
@@ -53,6 +57,7 @@ public class AccountsController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize]
     public async Task<ApiResponse> Delete([FromRoute] int id)
     {
         var operation = new DeleteAccountCommand(id);
