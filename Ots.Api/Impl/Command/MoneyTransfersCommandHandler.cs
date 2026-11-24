@@ -1,7 +1,5 @@
 using AutoMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Ots.Api.DbContext;
 using Ots.Api.Domain;
 using Ots.Api.Impl.Cqrs;
 using Ots.Api.Impl.Service;
@@ -13,27 +11,27 @@ namespace Ots.Api.Impl.Command;
 public class MoneyTransfersCommandHandler : 
     IRequestHandler<CreateMoneyTransferCommand, ApiResponse<TransactionResponse>>
 {
-    private readonly OtsDbContext dbContext;
+    private readonly IUnitOfWork unitOfWork;
     
     private readonly IAccountService accountService;
 
-    public MoneyTransfersCommandHandler(OtsDbContext dbContext,IAccountService accountService)
+    public MoneyTransfersCommandHandler(IUnitOfWork unitOfWork,IAccountService accountService)
     {
-        this.dbContext = dbContext;
+        this.unitOfWork = unitOfWork;
         this.accountService = accountService;
     }
 
     public async Task<ApiResponse<TransactionResponse>> Handle(CreateMoneyTransferCommand request, CancellationToken cancellationToken)
     {
         
-        var fromAccount = await dbContext.Set<Account>().FirstOrDefaultAsync(x => x.Id == request.MoneyTransfer.FromAccountId, cancellationToken);
+        var fromAccount = await unitOfWork.AccountRepository.GetByIdAsync(request.MoneyTransfer.FromAccountId);
         if (fromAccount == null)
             return new ApiResponse<TransactionResponse>("Account not found");
 
         if (!fromAccount.IsActive)
             return new ApiResponse<TransactionResponse>("Account is not active");
         
-        var toAccount = await dbContext.Set<Account>().FirstOrDefaultAsync(x => x.Id == request.MoneyTransfer.ToAccountId, cancellationToken);
+        var toAccount = await unitOfWork.AccountRepository.GetByIdAsync(request.MoneyTransfer.ToAccountId);
         if (toAccount == null)
             return new ApiResponse<TransactionResponse>("Account not found");
 
@@ -66,8 +64,8 @@ public class MoneyTransfersCommandHandler :
             FeeAmount = feeAmount,
            
         };
-        await dbContext.Set<MoneyTransfer>().AddAsync(MoneyTransfer, cancellationToken);
-        await dbContext.SaveChangesAsync(cancellationToken);
+        await unitOfWork.MoneyTransferRepository.AddAsync(MoneyTransfer);
+        await unitOfWork.Complete();
 
         var responseOutgoing = await accountService.CreateOutgoingAccountTransaction(fromAccount.Id, request.MoneyTransfer.Amount,
             feeAmount, request.MoneyTransfer.Description, refNumber);
