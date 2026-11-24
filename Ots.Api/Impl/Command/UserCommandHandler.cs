@@ -1,7 +1,5 @@
 using AutoMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Ots.Api.DbContext;
 using Ots.Api.Domain;
 using Ots.Api.Impl.Cqrs;
 using Ots.Api.Impl.Service;
@@ -16,20 +14,20 @@ public class UserCommandHandler :
     IRequestHandler<UpdateUserCommand, ApiResponse>,
     IRequestHandler<DeleteUserCommand, ApiResponse>
 {
-    private readonly OtsDbContext dbContext;
+    private readonly IUnitOfWork unitOfWork;
     private readonly IMapper mapper;
     private readonly IAppSession appSession;
     
 
-    public UserCommandHandler(OtsDbContext dbContext, IMapper mapper,IAppSession appSession)
+    public UserCommandHandler(IUnitOfWork unitOfWork, IMapper mapper,IAppSession appSession)
     {
-        this.dbContext = dbContext;
+        this.unitOfWork = unitOfWork;
         this.mapper = mapper;
         this.appSession = appSession;
     }
     public async Task<ApiResponse> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
     {
-        var entity = await dbContext.Set<User>().FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+        var entity = await unitOfWork.UserRepository.GetByIdAsync(request.Id);
         if (entity == null)
             return new ApiResponse("User not found");
 
@@ -38,12 +36,13 @@ public class UserCommandHandler :
 
         entity.IsActive = false;
 
-        await dbContext.SaveChangesAsync(cancellationToken);
+        unitOfWork.UserRepository.Delete(entity);
+        await unitOfWork.Complete();
         return new ApiResponse();
     }
     public async Task<ApiResponse> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
     {
-        var entity = await dbContext.Set<User>().FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+        var entity = await unitOfWork.UserRepository.GetByIdAsync(request.Id);
         if (entity == null)
             return new ApiResponse("User not found");
 
@@ -55,7 +54,8 @@ public class UserCommandHandler :
         entity.Role = request.User.Role;
         
 
-        await dbContext.SaveChangesAsync(cancellationToken);
+        unitOfWork.UserRepository.Update(entity);
+        await unitOfWork.Complete();
         return new ApiResponse();
     }
 
@@ -70,10 +70,10 @@ public class UserCommandHandler :
         var password = "123456";
         mapped.Password = PasswordGenerator.CreateMD5(password, mapped.Secret);
         
-        var entity = await dbContext.AddAsync(mapped, cancellationToken);
-        await dbContext.SaveChangesAsync(cancellationToken);
+        var entity = await unitOfWork.UserRepository.AddAsync(mapped);
+        await unitOfWork.Complete();
 
-        var response = mapper.Map<UserResponse>(entity.Entity);
+        var response = mapper.Map<UserResponse>(entity);
         return new ApiResponse<UserResponse>(response);
     }
 }
