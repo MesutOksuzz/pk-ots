@@ -27,6 +27,7 @@ public class CustomersController : ControllerBase
         var result = await mediator.Send(operation);
         return result;
     }
+    
     [HttpGet("GetById/{id}")]
     [Authorize(Roles = "admin,user")]
     public async Task<ApiResponse<CustomerResponse>> GetById([FromRoute] int id)
@@ -35,6 +36,16 @@ public class CustomersController : ControllerBase
         var result = await mediator.Send(operation);
         return result;
     }
+    
+    [HttpGet("ByParameters")]
+    [Authorize(Roles = "admin,user")]
+    public async Task<ApiResponse<List<CustomerResponse>>> GetByParameters([FromQuery] string? firstName,[FromQuery] string? lastName, [FromQuery] string? email)
+    {
+        var operation = new GetCustomerByParametersQuery(firstName, lastName, email);
+        var result = await mediator.Send(operation);
+        return result;
+    }
+    
     [HttpPost]
     [Authorize(Roles = "admin")]
     public async Task<ApiResponse<CustomerResponse>> Post([FromBody] CustomerRequest customer)
