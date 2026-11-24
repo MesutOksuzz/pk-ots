@@ -1,7 +1,5 @@
 using AutoMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Ots.Api.DbContext;
 using Ots.Api.Domain;
 using Ots.Api.Impl.Cqrs;
 using Ots.Base.ApiResponse;
@@ -13,19 +11,18 @@ public class UserQueryHandler :
     IRequestHandler<GetAllUsersQuery, ApiResponse<List<UserResponse>>>,
     IRequestHandler<GetUserByIdQuery, ApiResponse<UserResponse>>
 {
-    private readonly OtsDbContext context;
+    private readonly IUnitOfWork unitOfWork;
     private readonly IMapper mapper;
 
-    public UserQueryHandler(OtsDbContext context, IMapper mapper)
+    public UserQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
     {
-        this.context = context;
+        this.unitOfWork = unitOfWork;
         this.mapper = mapper;
     }
 
     public async Task<ApiResponse<List<UserResponse>>> Handle(GetAllUsersQuery request, CancellationToken cancellationToken)
     {
-        var Users = await context.Set<User>()
-            .ToListAsync(cancellationToken);
+        var Users = await unitOfWork.UserRepository.GetAllAsync();
 
         var mapped = mapper.Map<List<UserResponse>>(Users);
         return new ApiResponse<List<UserResponse>>(mapped);
@@ -33,8 +30,7 @@ public class UserQueryHandler :
 
     public async Task<ApiResponse<UserResponse>> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
     {
-        var User = await context.Set<User>()
-            .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+        var User = await unitOfWork.UserRepository.GetByIdAsync(request.Id);
 
         var mapped = mapper.Map<UserResponse>(User);
         return new ApiResponse<UserResponse>(mapped);

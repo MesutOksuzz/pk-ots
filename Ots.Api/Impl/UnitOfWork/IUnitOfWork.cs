@@ -12,5 +12,6 @@ public interface IUnitOfWork
     IGenericRepository<Account> AccountRepository { get; }
     IGenericRepository<AccountTransaction> AccountTransactionRepository { get; }
     IGenericRepository<EftTransaction> EftTransactionRepository { get; }
+    IGenericRepository<MoneyTransfer> MoneyTransferRepository { get; }
     IGenericRepository<User> UserRepository { get; }
 }

@@ -19,6 +19,7 @@ public class UnitOfWork : IUnitOfWork, IDisposable
     public IGenericRepository<Account> AccountRepository => new GenericRepository<Account>(dbContext);
     public IGenericRepository<AccountTransaction> AccountTransactionRepository => new GenericRepository<AccountTransaction>(dbContext);
     public IGenericRepository<EftTransaction> EftTransactionRepository => new GenericRepository<EftTransaction>(dbContext);
+    public IGenericRepository<MoneyTransfer> MoneyTransferRepository => new GenericRepository<MoneyTransfer>(dbContext);
     public IGenericRepository<User> UserRepository => new GenericRepository<User>(dbContext);
 
     public async Task Complete()
