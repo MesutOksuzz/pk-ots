@@ -20,6 +20,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet("GetAll")]
+    [Authorize(Roles = "admin")]
     public async Task<ApiResponse<List<UserResponse>>> GetAll()
     {
         var operation = new GetAllUsersQuery();
@@ -28,6 +29,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet("GetById/{id}")]
+    [Authorize(Roles = "admin")]
     public async Task<ApiResponse<UserResponse>> GetById([FromRoute] int id)
     {
         var operation = new GetUserByIdQuery(id);
@@ -36,6 +38,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "admin")]
     public async Task<ApiResponse<UserResponse>> Post([FromBody] UserRequest User)
     {
         var operation = new CreateUserCommand(User);
@@ -44,6 +47,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [Authorize(Roles = "admin")]
     public async Task<ApiResponse> Put([FromRoute] int id, [FromBody] UserRequest User)
     {
         var operation = new UpdateUserCommand(id, User);
@@ -52,6 +56,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = "admin")]
     public async Task<ApiResponse> Delete([FromRoute] int id)
     {
         var operation = new DeleteUserCommand(id);

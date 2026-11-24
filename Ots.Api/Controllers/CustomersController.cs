@@ -9,7 +9,7 @@ namespace Ots.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
+
 public class CustomersController : ControllerBase
 {
     private readonly IMediator mediator;
@@ -20,6 +20,7 @@ public class CustomersController : ControllerBase
     }
 
     [HttpGet("GetAll")]
+    [Authorize(Roles = "admin,user")]
     public async Task<ApiResponse<List<CustomerResponse>>> GetAll()
     {
         var operation = new GetAllCustomersQuery();
@@ -27,6 +28,7 @@ public class CustomersController : ControllerBase
         return result;
     }
     [HttpGet("GetById/{id}")]
+    [Authorize(Roles = "admin,user")]
     public async Task<ApiResponse<CustomerResponse>> GetById([FromRoute] int id)
     {
         var operation = new GetCustomerByIdQuery(id);
@@ -34,6 +36,7 @@ public class CustomersController : ControllerBase
         return result;
     }
     [HttpPost]
+    [Authorize(Roles = "admin")]
     public async Task<ApiResponse<CustomerResponse>> Post([FromBody] CustomerRequest customer)
     {
         var operation = new CreateCustomerCommand(customer);
@@ -41,6 +44,7 @@ public class CustomersController : ControllerBase
         return result;
     }
     [HttpPut("{id}")]
+    [Authorize(Roles = "admin")]
     public async Task<ApiResponse> Put([FromRoute] int id, [FromBody] CustomerRequest customer)
     {
         var operation = new UpdateCustomerCommand(id, customer);
@@ -49,6 +53,7 @@ public class CustomersController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = "admin")]
     public async Task<ApiResponse> Delete([FromRoute] int id)
     {
         var operation = new DeleteCustomerCommand(id);

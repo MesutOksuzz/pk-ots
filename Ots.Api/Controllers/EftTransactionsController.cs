@@ -9,7 +9,7 @@ namespace Ots.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
+
 public class EftTransactionsController : ControllerBase
 {
     private readonly IMediator mediator;
@@ -20,6 +20,7 @@ public class EftTransactionsController : ControllerBase
     }
 
     [HttpGet("GetByParameters")]
+    [Authorize(Roles = "admin,user")]
     public async Task<ApiResponse<List<EftTransactionResponse>>> GetByParameters()
     {
         var operation = new GetEftTransactionByParametersQuery();
@@ -28,6 +29,7 @@ public class EftTransactionsController : ControllerBase
     }
 
     [HttpGet("GetById/{id}")]
+    [Authorize(Roles = "admin,user")]
     public async Task<ApiResponse<EftTransactionResponse>> GetById([FromRoute] int id)
     {
         var operation = new GetEftTransactionByIdQuery(id);
@@ -36,6 +38,7 @@ public class EftTransactionsController : ControllerBase
     }
     
     [HttpPost]
+    [Authorize(Roles = "user")]
     public async Task<ApiResponse<TransactionResponse>> Post( [FromBody] EftTransactionRequest EftTransaction)
     {
         var operation = new CreateEftTransactionCommand( EftTransaction);

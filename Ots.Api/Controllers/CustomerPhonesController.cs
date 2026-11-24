@@ -9,7 +9,7 @@ namespace Ots.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
+
 public class CustomerPhonesController : ControllerBase
 {
     private readonly IMediator mediator;
@@ -20,6 +20,7 @@ public class CustomerPhonesController : ControllerBase
     }
 
     [HttpGet("GetAll")]
+    [Authorize(Roles = "admin,user")]
     public async Task<ApiResponse<List<CustomerPhoneResponse>>> GetAll()
     {
         var operation = new GetAllCustomerPhonesQuery();
@@ -28,6 +29,7 @@ public class CustomerPhonesController : ControllerBase
     }
 
     [HttpGet("GetById/{id}")]
+    [Authorize(Roles = "admin,user")]
     public async Task<ApiResponse<CustomerPhoneResponse>> GetById([FromRoute] int id)
     {
         var operation = new GetCustomerPhoneByIdQuery(id);
@@ -36,6 +38,7 @@ public class CustomerPhonesController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "admin,user")]
     public async Task<ApiResponse<CustomerPhoneResponse>> Post([FromBody] CustomerPhoneRequest customerPhone)
     {
         var operation = new CreateCustomerPhoneCommand(customerPhone);
@@ -44,6 +47,7 @@ public class CustomerPhonesController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [Authorize(Roles = "admin,user")]
     public async Task<ApiResponse> Put([FromRoute] int id, [FromBody] CustomerPhoneRequest customerPhone)
     {
         var operation = new UpdateCustomerPhoneCommand(id, customerPhone);
@@ -52,6 +56,7 @@ public class CustomerPhonesController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = "admin,user")]
     public async Task<ApiResponse> Delete([FromRoute] int id)
     {
         var operation = new DeleteCustomerPhoneCommand(id);

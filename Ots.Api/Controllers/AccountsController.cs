@@ -38,7 +38,7 @@ public class AccountsController : ControllerBase
     }
     
     [HttpPost()]
-    [Authorize]
+    [Authorize(Roles = "admin,user")]
     public async Task<ApiResponse<AccountResponse>> Post( [FromBody] AccountRequest account)
     {
         var operation = new CreateAccountCommand( account);
@@ -48,7 +48,7 @@ public class AccountsController : ControllerBase
     
 
     [HttpPut("{id}")]
-    [Authorize]
+    [Authorize(Roles = "admin,user")]
     public async Task<ApiResponse> Put([FromRoute] int id, [FromBody] AccountRequest account)
     {
         var operation = new UpdateAccountCommand(id, account);
@@ -57,7 +57,7 @@ public class AccountsController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    [Authorize]
+    [Authorize(Roles = "admin")]
     public async Task<ApiResponse> Delete([FromRoute] int id)
     {
         var operation = new DeleteAccountCommand(id);
