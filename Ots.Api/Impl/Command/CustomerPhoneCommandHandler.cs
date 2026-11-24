@@ -48,6 +48,9 @@ public class CustomerPhoneCommandHandler :
 
        
         entity.PhoneNumber = request.CustomerPhone.PhoneNumber;
+        entity.CountryCode = request.CustomerPhone.CountryCode;
+        entity.PhoneNumber = request.CustomerPhone.PhoneNumber;
+        entity.IsDefault = request.CustomerPhone.IsDefault;
         
         unitOfWork.CustomerPhoneRepository.Update(entity);
         await unitOfWork.Complete();
