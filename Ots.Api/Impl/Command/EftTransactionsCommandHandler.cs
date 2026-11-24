@@ -1,7 +1,5 @@
 using AutoMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Ots.Api.DbContext;
 using Ots.Api.Domain;
 using Ots.Api.Impl.Cqrs;
 using Ots.Api.Impl.Service;
@@ -13,13 +11,13 @@ namespace Ots.Api.Impl.Command;
 public class EftTransactionsCommandHandler : 
     IRequestHandler<CreateEftTransactionCommand, ApiResponse<TransactionResponse>>
 {
-    private readonly OtsDbContext dbContext;
+    private readonly IUnitOfWork unitOfWork;
     private readonly IMapper mapper;
     private readonly IAccountService accountService;
 
-    public EftTransactionsCommandHandler(OtsDbContext dbContext, IMapper mapper,IAccountService accountService)
+    public EftTransactionsCommandHandler(IUnitOfWork unitOfWork, IMapper mapper,IAccountService accountService)
     {
-        this.dbContext = dbContext;
+        this.unitOfWork = unitOfWork;
         this.mapper = mapper;
         this.accountService = accountService;
     }
@@ -27,7 +25,7 @@ public class EftTransactionsCommandHandler :
     public async Task<ApiResponse<TransactionResponse>> Handle(CreateEftTransactionCommand request, CancellationToken cancellationToken)
     {
         
-        var account = await dbContext.Set<Account>().FirstOrDefaultAsync(x => x.Id == request.EftTransaction.AccountId, cancellationToken);
+        var account = await unitOfWork.AccountRepository.GetByIdAsync(request.EftTransaction.AccountId);
         if (account == null)
             return new ApiResponse<TransactionResponse>("Account not found");
 
@@ -53,8 +51,8 @@ public class EftTransactionsCommandHandler :
             FeeAmount = feeAmount,
             
         };
-        await dbContext.Set<EftTransaction>().AddAsync(eftTransaction, cancellationToken);
-        await dbContext.SaveChangesAsync(cancellationToken);
+        await unitOfWork.EftTransactionRepository.AddAsync(eftTransaction);
+        await unitOfWork.Complete();
 
         var responseAccount = await accountService.CreateOutgoingAccountTransaction(account.Id, request.EftTransaction.Amount,
             feeAmount, request.EftTransaction.Description, refNumber);
