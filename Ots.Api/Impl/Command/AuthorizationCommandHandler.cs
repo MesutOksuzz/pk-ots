@@ -1,6 +1,4 @@
 using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Ots.Api.DbContext;
 using Ots.Api.Domain;
 using Ots.Api.Impl.Cqrs;
 using Ots.Api.Impl.Service;
@@ -13,20 +11,20 @@ namespace Ots.Api.Impl.Command;
 public class AuthorizationCommandHandler:
     IRequestHandler<CreateAuthorizationTokenCommand, ApiResponse<AuthorizationResponse>>
 {
-    private readonly OtsDbContext dbContext;
+    private readonly IUnitOfWork unitOfWork;
     private readonly ITokenService tokenService;
     private readonly JwtConfig jwtConfig;
 
-    public AuthorizationCommandHandler(OtsDbContext dbContext,ITokenService tokenService,JwtConfig jwtconfig )
+    public AuthorizationCommandHandler(IUnitOfWork unitOfWork,ITokenService tokenService,JwtConfig jwtconfig )
     {
-        this.dbContext = dbContext;
+        this.unitOfWork = unitOfWork;
         this.tokenService = tokenService;
         this.jwtConfig = jwtconfig;
     }
     public async Task<ApiResponse<AuthorizationResponse>> Handle(CreateAuthorizationTokenCommand request, CancellationToken cancellationToken)
     {
-        var user = await dbContext.Set<User>()
-            .FirstOrDefaultAsync(x => x.UserName == request.Request.UserName, cancellationToken);
+        var users = await unitOfWork.UserRepository.GetAllAsync(x => x.UserName == request.Request.UserName);
+        var user = users.FirstOrDefault();
         if (user == null)
             return new ApiResponse<AuthorizationResponse>("User Name or Password is invalid ");
         
