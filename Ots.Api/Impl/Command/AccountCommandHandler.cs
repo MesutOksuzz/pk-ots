@@ -14,17 +14,17 @@ public class AccountCommandHandler:
     IRequestHandler<UpdateAccountCommand, ApiResponse>,
     IRequestHandler<DeleteAccountCommand, ApiResponse>
 {
-    private readonly OtsDbContext dbContext;
+    private readonly IUnitOfWork unitOfWork;
     private readonly IMapper mapper;
     
-    public AccountCommandHandler(OtsDbContext dbContext, IMapper mapper)
+    public AccountCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
     {
-        this.dbContext = dbContext;
+        this.unitOfWork = unitOfWork;
         this.mapper = mapper;
     }
     public async Task<ApiResponse> Handle(DeleteAccountCommand request, CancellationToken cancellationToken)
     {
-        var entity = await dbContext.Set<Account>().FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+        var entity = await unitOfWork.AccountRepository.GetByIdAsync(request.Id);
         if (entity == null)
             return new ApiResponse("Account NOT found");
         if (!entity.IsActive)
@@ -35,12 +35,13 @@ public class AccountCommandHandler:
         entity.UpdatedDate = DateTime.Now;
         entity.UpdatedUser = null;
         
-        await dbContext.SaveChangesAsync(cancellationToken);
+        unitOfWork.AccountRepository.Delete(entity);
+        await unitOfWork.Complete();
         return new ApiResponse();
     }
     public async Task<ApiResponse> Handle(UpdateAccountCommand request, CancellationToken cancellationToken)
     {
-        var entity = await dbContext.Set<Account>().FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+        var entity = await unitOfWork.AccountRepository.GetByIdAsync(request.Id);
         if (entity == null)
             return new ApiResponse("Account not found");
 
@@ -48,21 +49,14 @@ public class AccountCommandHandler:
             return new ApiResponse("Account is not active");
 
         entity.Name = request.Account.Name;
-        entity.UpdatedDate = DateTime.Now;
-        entity.UpdatedUser = null;
-
-        await dbContext.SaveChangesAsync(cancellationToken);
+        
+        unitOfWork.AccountRepository.Update(entity);
+        await unitOfWork.Complete();
         return new ApiResponse();
     }
     public async Task<ApiResponse<AccountResponse>> Handle(CreateAccountCommand request, CancellationToken cancellationToken)
     {
-        var customer = await dbContext.Set<Customer>().FirstOrDefaultAsync(x => x.Id == request.Account.CustomerId, cancellationToken);
-        if (customer == null)
-            return new ApiResponse<AccountResponse>("Customer not found");
-
-        if (!customer.IsActive)
-            return new ApiResponse<AccountResponse>("Customer is not active");
-
+        
         var mapped = mapper.Map<Account>(request.Account);
        
         mapped.IsActive = true;
@@ -71,10 +65,9 @@ public class AccountCommandHandler:
         mapped.Balance = 0;
         mapped.OpenDate = DateTime.Now;
 
-        var entity = await dbContext.AddAsync(mapped, cancellationToken);
-        await dbContext.SaveChangesAsync(cancellationToken);
-
-        var response = mapper.Map<AccountResponse>(entity.Entity);
+        var entity = await unitOfWork.AccountRepository.AddAsync(mapped);
+        await unitOfWork.Complete();
+        var response = mapper.Map<AccountResponse>(entity);
         return new ApiResponse<AccountResponse>(response);
     }
     

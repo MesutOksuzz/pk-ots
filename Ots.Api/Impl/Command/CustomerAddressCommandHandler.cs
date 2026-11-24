@@ -1,7 +1,5 @@
 using AutoMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Ots.Api.DbContext;
 using Ots.Api.Domain;
 using Ots.Api.Impl.Cqrs;
 using Ots.Base.ApiResponse;
@@ -14,18 +12,18 @@ public class CustomerAddressCommandHandler :
     IRequestHandler<UpdateCustomerAddressCommand, ApiResponse>,
     IRequestHandler<DeleteCustomerAddressCommand, ApiResponse>
 {
-    private readonly OtsDbContext dbContext;
+    private readonly IUnitOfWork unitOfWork;
     private readonly IMapper mapper;
 
-    public CustomerAddressCommandHandler(OtsDbContext dbContext, IMapper mapper)
+    public CustomerAddressCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
     {
-        this.dbContext = dbContext;
+        this.unitOfWork = unitOfWork;
         this.mapper = mapper;
     }
 
     public async Task<ApiResponse> Handle(DeleteCustomerAddressCommand request, CancellationToken cancellationToken)
     {
-        var entity = await dbContext.Set<CustomerAddress>().FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+        var entity = await unitOfWork.CustomerAddressRepository.GetByIdAsync(request.Id);
         if (entity == null)
             return new ApiResponse("CustomerAddress not found");
 
@@ -33,16 +31,15 @@ public class CustomerAddressCommandHandler :
             return new ApiResponse("CustomerAddress is not active");
 
         entity.IsActive = false;
-        entity.UpdatedDate = DateTime.Now;
-        entity.UpdatedUser = null;
 
-        await dbContext.SaveChangesAsync(cancellationToken);
+        unitOfWork.CustomerAddressRepository.Delete(entity);
+        await unitOfWork.Complete();
         return new ApiResponse();
     }
 
     public async Task<ApiResponse> Handle(UpdateCustomerAddressCommand request, CancellationToken cancellationToken)
     {
-        var entity = await dbContext.Set<CustomerAddress>().FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+        var entity = await unitOfWork.CustomerAddressRepository.GetByIdAsync(request.Id);
         if (entity == null)
             return new ApiResponse("CustomerAddress not found");
 
@@ -56,14 +53,14 @@ public class CustomerAddressCommandHandler :
         entity.ZipCode = request.CustomerAddress.ZipCode;
         entity.IsDefault = request.CustomerAddress.IsDefault;
         
-
-        await dbContext.SaveChangesAsync(cancellationToken);
+        unitOfWork.CustomerAddressRepository.Update(entity);
+        await unitOfWork.Complete();
         return new ApiResponse();
     }
 
     public async Task<ApiResponse<CustomerAddressResponse>> Handle(CreateCustomerAddressCommand request, CancellationToken cancellationToken)
     {
-        var customer = await dbContext.Set<Customer>().FirstOrDefaultAsync(x => x.Id == request.CustomerId, cancellationToken);
+        var customer = await unitOfWork.CustomerRepository.GetByIdAsync(request.CustomerId);
         if (customer == null)
             return new ApiResponse<CustomerAddressResponse>("Customer not found");
 
@@ -72,14 +69,12 @@ public class CustomerAddressCommandHandler :
 
         var mapped = mapper.Map<CustomerAddress>(request.CustomerAddress);
         mapped.CustomerId = request.CustomerId;
-        mapped.InsertedDate = DateTime.Now;
-        mapped.InsertedUser = "test";
         mapped.IsActive = true;
 
-        var entity = await dbContext.AddAsync(mapped, cancellationToken);
-        await dbContext.SaveChangesAsync(cancellationToken);
+        var entity = await unitOfWork.CustomerAddressRepository.AddAsync(mapped);
+        await unitOfWork.Complete();
 
-        var response = mapper.Map<CustomerAddressResponse>(entity.Entity);
+        var response = mapper.Map<CustomerAddressResponse>(entity);
         return new ApiResponse<CustomerAddressResponse>(response);
     }
 }

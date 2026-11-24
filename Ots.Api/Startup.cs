@@ -10,6 +10,7 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
+using Ots.Api.Impl;
 using Ots.Api.Impl.Service;
 using Ots.Api.Mapper;
 using Ots.Api.Middleware;
@@ -52,6 +53,7 @@ public class Startup
         services.AddSingleton<SingletonService>();
         services.AddScoped<IAccountService, AccountService>();
         services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
         
         services.AddAuthentication(x =>
         {
