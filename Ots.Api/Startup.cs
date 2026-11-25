@@ -8,6 +8,7 @@ using Ots.Api.Impl.Cqrs;
 using Ots.Api.Impl.Validation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using Ots.Api.Impl;
@@ -38,6 +39,27 @@ public class Startup
         {
             x.RegisterValidatorsFromAssemblyContaining<CustomerValidator>();
         });
+        services.AddControllersWithViews(options =>
+            {
+                options.CacheProfiles.Add("Default45",
+                    new CacheProfile
+                    {
+                        Duration = 45,
+                        Location = ResponseCacheLocation.Any,
+                        NoStore = false
+                    });
+            });   /*üstteki bir seçenek, diğer seçenek altta
+
+             services.AddControllersWithViews(options =>
+        {
+            options.Filters.Add(new ResponseCacheAttribute
+            {
+                Duration = 60,
+                Location = ResponseCacheLocation.Any,
+                NoStore = false
+            });
+        });
+             */
         
         var mapperConfig = new MapperConfiguration(x => x.AddProfile(new MapperConfig()));
         services.AddSingleton(mapperConfig.CreateMapper());
@@ -55,6 +77,9 @@ public class Startup
         services.AddScoped<IAccountService, AccountService>();
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        services.AddResponseCaching();  
+        
         
         services.AddAuthentication(x =>
         {

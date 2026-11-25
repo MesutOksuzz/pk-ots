@@ -3,9 +3,10 @@ using Ots.Api.Domain;
 using Ots.Api.Impl.GenericRepository;
 using Serilog;
 
+
 namespace Ots.Api.Impl;
 
-public class UnitOfWork : IDisposable ,IUnitOfWork
+public class UnitOfWork : IUnitOfWork , IDisposable 
 {
     private readonly OtsDbContext dbContext;
 
@@ -30,6 +31,8 @@ public class UnitOfWork : IDisposable ,IUnitOfWork
 
     public IGenericRepository<MoneyTransfer> MoneyTransferRepository => new GenericRepository<MoneyTransfer>(dbContext);
     public IGenericRepository<User> UserRepository => new GenericRepository<User>(dbContext);
+
+    public IGenericRepository<Country> CountryRepository => new GenericRepository<Country>(dbContext);
 
     public async Task Complete()
     {

@@ -14,8 +14,10 @@ public class MapperConfig : Profile
         CreateMap<UserRequest, User>();
         CreateMap<User, UserResponse>();
         
-        
+        CreateMap<CountryRequest, Country>();
+        CreateMap<Country, CountryResponse>();
 
+        
         
         CreateMap<CustomerPhoneRequest, CustomerPhone>();
         CreateMap<CustomerPhone, CustomerPhoneResponse>()

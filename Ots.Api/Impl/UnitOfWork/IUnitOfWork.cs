@@ -14,4 +14,5 @@ public interface IUnitOfWork : IDisposable
     IGenericRepository<EftTransaction> EftTransactionRepository { get; }
     IGenericRepository<MoneyTransfer> MoneyTransferRepository { get; }
     IGenericRepository<User> UserRepository { get; }
+    IGenericRepository<Country> CountryRepository { get; }
 }

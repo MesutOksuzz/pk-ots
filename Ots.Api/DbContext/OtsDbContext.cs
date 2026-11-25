@@ -11,9 +11,9 @@ public class OtsDbContext : Microsoft.EntityFrameworkCore.DbContext
     private readonly IAppSession appSession;
   
     
-    public OtsDbContext(DbContextOptions<OtsDbContext> options) : base(options)
+    public OtsDbContext(DbContextOptions<OtsDbContext> options, IAppSession appSession) : base(options)
     {
-        
+        this.appSession = appSession;
     }
     
 
