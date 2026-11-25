@@ -4,7 +4,7 @@ using Ots.Api.Impl.GenericRepository;
 
 namespace Ots.Api.Impl;
 
-public class UnitOfWork : IUnitOfWork, IDisposable
+public class UnitOfWork : IDisposable ,IUnitOfWork
 {
     private readonly OtsDbContext dbContext;
 
@@ -12,13 +12,21 @@ public class UnitOfWork : IUnitOfWork, IDisposable
     {
         this.dbContext = dbContext;
     }
-    
+
     public IGenericRepository<Customer> CustomerRepository => new GenericRepository<Customer>(dbContext);
-    public IGenericRepository<CustomerPhone> CustomerPhoneRepository =>  new GenericRepository<CustomerPhone>(dbContext);
-    public IGenericRepository<CustomerAddress> CustomerAddressRepository =>new GenericRepository<CustomerAddress>(dbContext);
+    public IGenericRepository<CustomerPhone> CustomerPhoneRepository => new GenericRepository<CustomerPhone>(dbContext);
+
+    public IGenericRepository<CustomerAddress> CustomerAddressRepository =>
+        new GenericRepository<CustomerAddress>(dbContext);
+
     public IGenericRepository<Account> AccountRepository => new GenericRepository<Account>(dbContext);
-    public IGenericRepository<AccountTransaction> AccountTransactionRepository => new GenericRepository<AccountTransaction>(dbContext);
-    public IGenericRepository<EftTransaction> EftTransactionRepository => new GenericRepository<EftTransaction>(dbContext);
+
+    public IGenericRepository<AccountTransaction> AccountTransactionRepository =>
+        new GenericRepository<AccountTransaction>(dbContext);
+
+    public IGenericRepository<EftTransaction> EftTransactionRepository =>
+        new GenericRepository<EftTransaction>(dbContext);
+
     public IGenericRepository<MoneyTransfer> MoneyTransferRepository => new GenericRepository<MoneyTransfer>(dbContext);
     public IGenericRepository<User> UserRepository => new GenericRepository<User>(dbContext);
 
@@ -38,8 +46,23 @@ public class UnitOfWork : IUnitOfWork, IDisposable
             }
         }
     }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposed)
+        {
+            if (disposing)
+            {
+                dbContext.Dispose();
+            }
+        }
+        _disposed = true;
+    }
     public void Dispose()
     {
-        dbContext.Dispose();
+        Dispose(true);
+        GC.SuppressFinalize(this);
     }
+    private bool _disposed = false;
 }
+   

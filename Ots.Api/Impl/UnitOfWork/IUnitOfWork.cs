@@ -3,7 +3,7 @@ using Ots.Api.Impl.GenericRepository;
 
 namespace Ots.Api.Impl;
 
-public interface IUnitOfWork
+public interface IUnitOfWork : IDisposable 
 {
     Task Complete();
     IGenericRepository<Customer> CustomerRepository { get; }
