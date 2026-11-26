@@ -18,6 +18,7 @@ using Ots.Api.Middleware;
 using Ots.Base;
 using Ots.Base.Services;
 using Serilog;
+using StackExchange.Redis;
 
 
 namespace Ots.Api;
@@ -78,7 +79,8 @@ public class Startup
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-        services.AddResponseCaching();  
+        services.AddResponseCaching();
+        services.AddMemoryCache();
         
         
         services.AddAuthentication(x =>
@@ -143,6 +145,15 @@ public class Startup
 
             return appSession;
         });
+        var redisConnection = new ConfigurationOptions();
+        redisConnection.EndPoints.Add(Configuration["Redis:Host"],Convert.ToInt32(Configuration["Redis:Port"]));
+        redisConnection.DefaultDatabase = 0;
+        services.AddStackExchangeRedisCache(options =>
+        {
+            options.ConfigurationOptions = redisConnection;
+            options.InstanceName = Configuration["Redis:InstanceName"];
+
+        });
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -171,6 +182,7 @@ public class Startup
         app.UseAuthentication();
         app.UseRouting();
         app.UseAuthorization();
+        app.UseResponseCaching();
         app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         app.Use((context, next) =>
         {

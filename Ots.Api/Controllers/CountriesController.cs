@@ -19,18 +19,27 @@ public class CountriesController : ControllerBase
         this.mediator = mediator;
     }
 
-    [HttpGet("GetAll")] //burası sadece user iken 403 dönüyor !!
+    [HttpGet("Get/Memory")] //burası sadece user iken 403 dönüyor !!
     /*[ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any, NoStore = false)] */
-    [ResponseCache(CacheProfileName = "Default45")]
-    public async Task<ApiResponse<List<CountryResponse>>> GetAll()
+   // [ResponseCache(CacheProfileName = "Default45")]
+    public async Task<ApiResponse<List<CountryResponse>>> GetAllFromMemory()
     {
-        var operation = new GetAllCountryQuery();
+        var operation = new GetAllCountryQuery("Memory");
+        var result = await mediator.Send(operation);
+        return result;
+    }
+    
+    [HttpGet("Get/Redis")] 
+    public async Task<ApiResponse<List<CountryResponse>>> GetAllFromRedis()
+    {
+        var operation = new GetAllCountryQuery("Redis");
         var result = await mediator.Send(operation);
         return result;
     }
 
     [HttpGet("GetById/{id}")]
-    [Authorize(Roles = "admin, user")]
+    [ResponseCache(CacheProfileName = "Default45")]
+    //[Authorize(Roles = "admin, user")]
     public async Task<ApiResponse<CountryResponse>> GetById([FromRoute] int id)
     {
         var operation = new GetCountryByIdQuery(id);
@@ -39,7 +48,7 @@ public class CountriesController : ControllerBase
     }
     
     [HttpPost()]
-    [Authorize(Roles = "admin,user")]
+    //[Authorize(Roles = "admin,user")]
     public async Task<ApiResponse<CountryResponse>> Post( [FromBody] CountryRequest Country)
     {
         var operation = new CreateCountryCommand( Country);
@@ -49,7 +58,7 @@ public class CountriesController : ControllerBase
     
 
     [HttpPut("{id}")]
-    [Authorize(Roles = "admin,user")]
+    //[Authorize(Roles = "admin,user")]
     public async Task<ApiResponse> Put([FromRoute] int id, [FromBody] CountryRequest Country)
     {
         var operation = new UpdateCountryCommand(id, Country);
@@ -58,7 +67,7 @@ public class CountriesController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    [Authorize(Roles = "admin")]
+    //[Authorize(Roles = "admin")]
     public async Task<ApiResponse> Delete([FromRoute] int id)
     {
         var operation = new DeleteCountryCommand(id);
